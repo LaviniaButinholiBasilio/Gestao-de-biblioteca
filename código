@@ -1,0 +1,95 @@
+import os
+
+# Classe para manipulação dos dados da biblioteca
+class Biblioteca:
+    def __init__(self):
+        self.usuarios_path = "usuarios.txt"
+        self.livros_path = "livros.txt"
+        self.emprestimos_path = "emprestimos.txt"
+        self.usuario_atual = None
+
+    # Validação do usuário
+    def validar_usuario(self, login, senha):
+        try:
+            with open(self.usuarios_path, "r") as file:
+                for linha in file:
+                    codigo, nome, tipo, login_arquivo, senha_arquivo = linha.strip().split(",")
+                    if login == login_arquivo and senha == senha_arquivo:
+                        self.usuario_atual = {"codigo": codigo, "nome": nome, "tipo": tipo}
+                        return True
+            return False
+        except FileNotFoundError:
+            print("Arquivo de usuários não encontrado!")
+            return False
+
+    # Listar livros disponíveis
+    def listar_livros(self):
+        try:
+            with open(self.livros_path, "r") as file:
+                print("\n--- Livros Disponíveis ---")
+                for linha in file:
+                    codigo, nome, autor = linha.strip().split(",")
+                    print(f"Código: {codigo}, Nome: {nome}, Autor: {autor}")
+        except FileNotFoundError:
+            print("Arquivo de livros não encontrado!")
+
+    # Listar empréstimos do usuário atual
+    def listar_emprestimos(self):
+        if not self.usuario_atual:
+            print("Nenhum usuário logado!")
+            return
+        try:
+            with open(self.emprestimos_path, "r") as file:
+                print(f"\n--- Empréstimos de {self.usuario_atual['nome']} ---")
+                for linha in file:
+                    codigo, cliente, livro, data = linha.strip().split(",")
+                    if cliente == self.usuario_atual["codigo"]:
+                        print(f"Código: {codigo}, Livro: {livro}, Data: {data}")
+        except FileNotFoundError:
+            print("Arquivo de empréstimos não encontrado!")
+
+    # Exibir informações sobre a empresa
+    def sobre(self):
+        print("\n--- Sobre o Sistema ---")
+        print("Empresa: TechBooks Solutions")
+        print("Desenvolvedores: João, Maria, Ana")
+        print("Programa: Sistema de Biblioteca")
+        print("Descrição: Este sistema permite gerenciar empréstimos e visualizar livros de maneira prática.")
+
+    # Menu para interação do usuário
+    def menu_usuario(self):
+        while True:
+            print("\n--- Menu ---")
+            print("1 - Visualizar Empréstimos")
+            print("2 - Visualizar Livros")
+            print("3 - Sobre")
+            print("4 - Sair")
+            escolha = input("Escolha uma opção: ")
+
+            if escolha == "1":
+                self.listar_emprestimos()
+            elif escolha == "2":
+                self.listar_livros()
+            elif escolha == "3":
+                self.sobre()
+            elif escolha == "4":
+                print("Saindo do sistema...")
+                break
+            else:
+                print("Opção inválida! Tente novamente.")
+
+# Função principal
+def main():
+    sistema = Biblioteca()
+    print("\n--- Bem-vindo ao Sistema de Biblioteca ---")
+    login = input("Informe o login: ")
+    senha = input("Informe a senha: ")
+
+    if sistema.validar_usuario(login, senha):
+        print(f"Bem-vindo, {sistema.usuario_atual['nome']}!")
+        sistema.menu_usuario()
+    else:
+        print("Login ou senha inválidos!")
+
+if __name__ == "__main__":
+    main()
