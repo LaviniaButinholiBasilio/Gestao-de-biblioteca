@@ -1,0 +1,6 @@
+1,João,Cliente,joao,12345
+2,PedroE,Bibliotecario,pedroE,54321
+3,PedroM,Bibliotecario,pedroM,54321
+4,PedroG,Bibliotecario,pedroG,54321
+5,Lavinia,Bibliotecario,lavinia,54321
+5,Natan,Bibliotecario,natan,54321
